@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    command: python /code/manage.py runserver 0.0.0.0:8000 #--settings=blog.settings.dev
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    env_file:
+      - .env/.dev
+    depends_on:
+      - pgdb
+
+  pgdb:
+    image: postgres:13.2-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=useruser
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=postgresdb
+    #env_file:
+    #  - .env/.dev_db
+
+
+volumes:
+  postgres_data:
